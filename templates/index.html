@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <h1>Chat</h1>
+    <ul id="messages">
+
+    </ul>
+    <input id="myMessage" autocomplete="off">
+    <button id="send">Send</button>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- Socket IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+
+
+    <script>
+        const SOCKET_URL = 'http://localhost:5000';
+
+        const socket = io(SOCKET_URL, {
+            transports: ['websocket'],  // Asegúrate de que se use el transporte WebSocket
+            reconnection: true,         // Permitir reconexiones automáticas
+        });
+
+        //const socket = io();
+        
+        
+
+        socket.emit('itemAdded', {name:"Papa"})
+
+        socket.on('itemAdded', function(msg) {
+            console.log(msg)
+            $('#messages').append('<li>' + msg.name + '</li>')
+        })
+
+        $('#send').on('click', function() {
+            
+            //alert($('#myMessage').val())
+            //socket.emit('itemAdded', 'Hola')
+            //socket.send($('#myMessage').val())
+            const newItem = {                
+                "name": $('#myMessage').val()
+            }
+            socket.emit('itemAdded', newItem)
+            //socket.emit('message', $('#myMessage').val())
+            
+            /*
+            socket.emit('itemAdded', {
+                "name": "papa"
+            })
+            */
+            $('#myMessage').val('')
+        })
+
+        $('#myMessage').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                
+            }
+        })
+    </script>
+
+</body>
+</html>
