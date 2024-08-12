@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_socketio import SocketIO, send
 from flask_cors import CORS
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -8,6 +9,15 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True)
 
 CORS(app)
+
+
+# MySQL configuration
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'shopping-list'
+
+mysql = MySQL(app)
 
 @socketio.on('itemAdded')
 def handleMessage(msg):

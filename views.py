@@ -33,13 +33,18 @@ def update_item_view(item_id):
     item = update_item(item_id, purchased)
     if item:
         socketio.emit('itemUpdated', item)
-        return jsonify(item)
+        return jsonify({'message': 'Item updated successfully'}), 204
     return jsonify({'error': 'Item not found'}), 404
 
 @app.route('/items/<int:item_id>', methods=['DELETE'])
 def delete_item_view(item_id):
-    items = delete_item(item_id)
-    socketio.emit('itemDeleted', item_id)
-    return jsonify(items)
+    try:
+        delete_item(item_id)
+        socketio.emit('itemDeleted', item_id)
+        response = {'message': 'Item deleted successfully'}
+        return jsonify(response), 204
+    except Exception as e:
+        print("Error during delete process:", e)
+        return jsonify({'error': 'An error occurred'}), 500
 
 
